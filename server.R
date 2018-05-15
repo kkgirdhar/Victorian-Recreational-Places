@@ -53,7 +53,7 @@ shinyServer(function(input, output) {
     #                               message = TRUE))
     # }
     # )
-    
+    #try catch if there is any error in getting the weather
     b<- try(abc <- as.vector(conditions(location, use_metric = TRUE, key = "7c66212b86d504bb", raw = FALSE,message = TRUE)))
     if(class(b) == "try-error")
     {
@@ -71,14 +71,14 @@ shinyServer(function(input, output) {
     
     
   })
-  
+  #Paste the url on the second absolute panel
   output$url <- renderUI({
     
     tagList( ref)
     
   })
   
-  
+  #outputs the contents of select input based on the value selected from first input
   output$secondselection <- renderUI({
     
     if (input$Suburb == "All")
@@ -94,7 +94,7 @@ shinyServer(function(input, output) {
       })
   
   
-  
+  #This code is used to plot the map output on the whole screen and activates the gps when you first statr the app
   output$map <- renderLeaflet({
     
     if ( input$Suburb == "All" & input$Sports == "All"){
@@ -111,6 +111,7 @@ shinyServer(function(input, output) {
                                                                                                    setView = TRUE))
      activateGPS(map)
     }
+    #below block of code displays the sports selected in a All suburb
     else if (input$Suburb == "All"){
       
       ydata<- mydata[mydata$SportsPlayed == input$Sports, ]
@@ -123,7 +124,7 @@ shinyServer(function(input, output) {
         addCircleMarkers(~Longitude, ~Latitude,radius = .0002,popup = paste(ydata$FacilityName, "<br>", ydata$Street, " " ,
                                                                             ydata$SuburbTown,"<br>", ydata$SportsPlayed))
     }
-    
+    #below code block displays all the sports for a selected suburb
     else if (input$Sports == "All"){
       
       ydata<- mydata[mydata$SuburbTown == input$Suburb, ]
@@ -136,7 +137,7 @@ shinyServer(function(input, output) {
         addCircleMarkers(~Longitude, ~Latitude,radius = .0002,popup = paste(ydata$FacilityName, "<br>", ydata$Street, " " ,
                                                                             ydata$SuburbTown,"<br>", ydata$SportsPlayed))
     }
-    
+    #this block of code displays the sports selected for selected suburb
     else{
       
       ydata<- mydata[mydata$SuburbTown == input$Suburb, ]
